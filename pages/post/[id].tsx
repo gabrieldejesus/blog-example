@@ -24,12 +24,22 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   };
 };
 
+// publish post
 async function publishPost(id: string): Promise<void> {
   await fetch(`/api/publish/${id}`, {
     method: "PUT",
   });
 
   await Router.push("/");
+}
+
+// delete post
+async function deletePost(id: string): Promise<void> {
+  await fetch(`/api/post/${id}`, {
+    method: "DELETE",
+  });
+
+  Router.push("/");
 }
 
 const Post: NextPage<PostProps> = (props) => {
@@ -59,6 +69,10 @@ const Post: NextPage<PostProps> = (props) => {
 
         {!props.published && userHasValidSession && postBelongsToUser && (
           <button onClick={() => publishPost(props.id)}>Publish</button>
+        )}
+
+        {userHasValidSession && postBelongsToUser && (
+          <button onClick={() => deletePost(props.id)}>Delete</button>
         )}
       </div>
 

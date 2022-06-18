@@ -1,1 +1,1 @@
-# Fullstack App with Next.js, Prisma, and PostgreSQL
+# Blog App with Next.js, Prisma, and PostgreSQL.
