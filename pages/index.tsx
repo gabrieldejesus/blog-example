@@ -3,20 +3,21 @@ import { GetServerSideProps, NextPage } from "next";
 import Layout from "../components/Layout";
 import Post, { PostProps } from "../components/Post";
 
+// utils
+import prisma from "../lib/prisma";
+
 export const getServerSideProps: GetServerSideProps = async () => {
-  const feed = [
-    {
-      id: "1",
-      title: "Lorem ipsum dolor sit amet eiusmod lacinia mi non.",
-      content:
-        "Lorem ipsum dolor sit amet eiusmod lacinia mi non. Adipiscing duis tincidunt lectus nulla integer enim facilisi dui.",
-      published: false,
+  const feed = await prisma.post.findMany({
+    where: { published: true },
+    include: {
       author: {
-        name: "Gabriel de Jesus",
-        email: "hi@gabrieldejesus.dev",
+        select: { name: true },
       },
     },
-  ];
+  });
+
+  console.log(feed);
+
   return { props: { feed } };
 };
 

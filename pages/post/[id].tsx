@@ -4,18 +4,19 @@ import ReactMarkdown from "react-markdown";
 import Layout from "../../components/Layout";
 import { PostProps } from "../../components/Post";
 
+// utils
+import prisma from "../../lib/prisma";
+
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
-  const post = {
-    id: "1",
-    title: "Lorem ipsum dolor sit amet eiusmod lacinia mi non.",
-    content:
-      "Lorem ipsum dolor sit amet eiusmod lacinia mi non. Adipiscing duis tincidunt lectus nulla integer enim facilisi dui.",
-    published: false,
-    author: {
-      name: "Gabriel de Jesus",
-      email: "hi@gabrieldejesus.dev",
+  const post = await prisma.post.findUnique({
+    where: { id: String(params?.id) },
+    include: {
+      author: {
+        select: { name: true },
+      },
     },
-  };
+  });
+
   return {
     props: post,
   };
@@ -23,6 +24,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
 
 const Post: NextPage<PostProps> = (props) => {
   let title = props.title;
+
   if (!props.published) {
     title = `${title} (Draft)`;
   }
